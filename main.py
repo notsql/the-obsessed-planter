@@ -23,7 +23,9 @@ def load_configs():
     app=app_config,
     gsm=gsm_config)
 
-def get_res(gsm):
+def get_res(gsm, command):
+  gsm.write(command)
+
   buffer = gsm.readline()
   sleep(0.1)
   buffer += gsm.read(gsm.in_waiting)
@@ -45,17 +47,16 @@ def init_gsm(port, baudrate, bytesize, stopbits, debug):
   gsm.flush()
 
   if debug:
-    gsm.write(AT_COMMANDS["status"])
-    print("Status:\t\t", get_res(gsm))
+    print("\n", "***GSM Information***")
+    print("Status:\t\t", get_res(gsm, AT_COMMANDS["status"]))
+    print("Model ID:\t", get_res(gsm, AT_COMMANDS["model_id"]))
+    print("Model SN.:\t", get_res(gsm, AT_COMMANDS["model_sn"]))
+    print("Module:\t\t", get_res(gsm, AT_COMMANDS["module"]))
 
-    gsm.write(AT_COMMANDS["model_id"])
-    print("Model ID:\t", get_res(gsm))
-
-    gsm.write(AT_COMMANDS["model_sn"])
-    print("Model SN.:\t", get_res(gsm))
-
-    gsm.write(AT_COMMANDS["module"])
-    print("Module:\t\t", get_res(gsm))
+    print("\n", "***SIM Informaiton***")
+    print("Carrier:\t", get_res(gsm, AT_COMMANDS["sim_op"]))
+    print("SIM ID:\t\t", get_res(gsm, AT_COMMANDS["sim_id"]))
+    print("Phone No.:\t", get_res(gsm, AT_COMMANDS["sim_no"]))
 
   return gsm
 
