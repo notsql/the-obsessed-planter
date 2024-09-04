@@ -3,13 +3,13 @@ import configparser as cfg
 from time import sleep
 
 AT_COMMANDS = {
-  "status": b"AT\r",
-  "model_id": b"AT+CGMM\r",
-  "model_sn": b"AT+CGSN\r",
-  "module": b"AT+CSUB\r",
-  "sim_id": b"AT+CICCID\r",
-  "sim_no": b"AT+CNUM\r",
-  "sim_op": b"AT+COPS?\r"
+  "status": b"AT\r\n",
+  "model_id": b"AT+CGMM\r\n",
+  "model_sn": b"AT+CGSN\r\n",
+  "module": b"AT+CSUB\r\n",
+  "sim_id": b"AT+CICCID\r\n",
+  "sim_no": b"AT+CNUM\r\n",
+  "sim_op": b"AT+COPS?\r\n"
 }
 
 def load_configs():
@@ -22,6 +22,14 @@ def load_configs():
   return dict(
     app=app_config,
     gsm=gsm_config)
+
+def get_res(gsm):
+  buffer = gsm.readline()
+  sleep(0.1)
+  buffer += gsm.read(gsm.in_waiting)
+
+  return buffer.decode().split("\n")[1]
+
 
 def init_gsm(port, baudrate, bytesize, stopbits, debug):
   try:
@@ -38,13 +46,16 @@ def init_gsm(port, baudrate, bytesize, stopbits, debug):
 
   if debug:
     gsm.write(AT_COMMANDS["status"])
+    print("Status:\t\t", get_res(gsm))
 
-    sleep(0.3)
+    gsm.write(AT_COMMANDS["model_id"])
+    print("Model ID:\t", get_res(gsm))
 
-    res = gsm.read()
-    res += gsm.read(gsm.in_waiting)
+    gsm.write(AT_COMMANDS["model_sn"])
+    print("Model SN.:\t", get_res(gsm))
 
-    print(res.decode())
+    gsm.write(AT_COMMANDS["module"])
+    print("Module:\t\t", get_res(gsm))
 
   return gsm
 
