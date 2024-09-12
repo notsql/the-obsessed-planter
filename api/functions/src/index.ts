@@ -9,7 +9,7 @@
 
 import { HttpsError, onRequest } from "firebase-functions/v2/https";
 // import { onTaskDispatched } from "firebase-functions/v2/tasks";
-import * as logger from "firebase-functions/logger";
+// import * as logger from "firebase-functions/logger";
 
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
@@ -69,8 +69,6 @@ export const answer = onRequest({ region: "asia-southeast1" }, async (request, r
     throw new HttpsError("permission-denied", "Invalid token");
   }
 
-  logger.info(request.query);
-
   const ncco: Array<VonageRecordNCCO | VonageTalkNCCO | VonageInputNCCO> = [
     {
       action: "talk",
@@ -114,8 +112,6 @@ export const recorded = onRequest({ region: "asia-southeast1" }, async (request,
   // const start_time = request.body.start_time;
   // const end_time = request.body.end_time;
   const timestamp = request.body.timestamp;
-
-  logger.info(request.body);
 
   await db.collection("Callers").doc(callId).set({
     recording_url,
