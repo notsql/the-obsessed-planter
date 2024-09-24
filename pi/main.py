@@ -23,7 +23,10 @@ vc = Client(
 
 def play_sound(file_path):
   sound = pygame.mixer.Sound(file_path)
+
   playing = sound.play()
+
+  sound.set_volume(1)
 
   while playing.get_busy():
     pygame.time.delay(100)
@@ -44,13 +47,17 @@ def on_snap(col_snap, changes, read_time):
   for change in changes:
     if change.type.name == "ADDED":
       file_path = f"./output/{change.document.id}"
-      f = open(file_path, "wb+")
+      
+      try:
+        res = vc.voice.get_recording(change.document.to_dict()["recording_url"])
 
-      f.write(vc.voice.get_recording(change.document.to_dict()["recording_url"]))
+        f = open(file_path, "wb+")
+        f.write()
+        f.close()
 
-      f.close()
-
-      add_fixed_playlist(file_path)
+        add_fixed_playlist(file_path)
+      except:
+        print("File does not exist or has expired")
 
 col_query = db.collection("Callers").on_snapshot(on_snap)
 
