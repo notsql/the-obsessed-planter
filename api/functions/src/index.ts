@@ -55,6 +55,14 @@ interface VonageInputNCCO extends VonageNCCO {
   }
 }
 
+interface VonageStreamNCCO extends VonageNCCO {
+  action: "stream",
+  streamUrl: string[],
+  level?: number,
+  bargeIn?: boolean,
+  loop?: number,
+}
+
 
 initializeApp();
 
@@ -70,10 +78,10 @@ export const answer = onRequest({ region: "asia-southeast1" }, async (request, r
   }
 
   const ncco: Array<VonageRecordNCCO | VonageTalkNCCO | VonageInputNCCO> = [
-    {
-      action: "talk",
-      text: "Please leave a message. The 10 seconds recording will start in. 3. 2. 1.",
-    },
+    // {
+    //   action: "talk",
+    //   text: "Please leave a message. The 10 seconds recording will start in. 3. 2. 1.",
+    // },
     // {
     //   action: "record",
     //   beepStart: true,
