@@ -77,7 +77,12 @@ export const answer = onRequest({ region: "asia-southeast1" }, async (request, r
     throw new HttpsError("permission-denied", "Invalid token");
   }
 
-  const ncco: Array<VonageRecordNCCO | VonageTalkNCCO | VonageInputNCCO> = [
+  const ncco: Array<VonageRecordNCCO | VonageTalkNCCO | VonageInputNCCO | VonageStreamNCCO> = [
+    {
+      action: "stream",
+      streamUrl: [process.env.STREAM_URL as string],
+      level: 1
+    },
     // {
     //   action: "talk",
     //   text: "Please leave a message. The 10 seconds recording will start in. 3. 2. 1.",
